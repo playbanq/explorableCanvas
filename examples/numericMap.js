@@ -2,10 +2,14 @@
 var numericMap = {
     tileSize: 20,
     zoneSize: 10,
-    width: 30,
+    top: 0,
+    left: 0,
+    width: 0,
     height: 30,
     elements: []
 };
+numericMap.right = numericMap.left + numericMap.tileSize * numericMap.width;
+numericMap.bottom = numericMap.top + numericMap.tileSize * numericMap.height;
 
 var value, zoneSize = numericMap.zoneSize;
 for (var i = 0; i < numericMap.height; i++) {
@@ -20,7 +24,6 @@ for (var i = 0; i < numericMap.height; i++) {
 }
 
 // Create canvas and start drawing
-var canvas = new ExplorableCanvas('explorableCanvas');
-canvas.setSize(500, 500);
+var canvas = new ExplorableCanvas('explorableCanvas', 500, 500);
 
 canvas.drawMap(numericMap);
