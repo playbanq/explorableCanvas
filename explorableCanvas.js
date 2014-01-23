@@ -18,7 +18,6 @@ var ExplorableCanvas = function (id, width, height) {
     var properties = {
         'setSize': {
             value: function (width, height) {
-                console.log(width, height);
                 canvasElement.width = width;
                 canvasElement.height = height;
             }
@@ -28,17 +27,20 @@ var ExplorableCanvas = function (id, width, height) {
                 var top = 0, left = 0, withinCanvas, shiftedX, shiftedY;
                 context.font = '20px Sans';
 
-                map.elements.forEach(function (element) {
-                    shiftedX = element.x + offsetX;
-                    shiftedY = element.y + offsetY;
+                setInterval(function () {
+                    context.clearRect(0, 0, canvasElement.width, canvasElement.height);
+                    map.elements.forEach(function (element) {
+                        shiftedX = element.x + offsetX;
+                        shiftedY = element.y + offsetY;
 
-                    withinCanvas = (shiftedX > 0 && shiftedX < canvasElement.width) &&
-                                    (shiftedY > 0 && shiftedX < canvasElement.height);
+                        withinCanvas = (shiftedX > 0 && shiftedX < canvasElement.width) &&
+                                        (shiftedY > 0 && shiftedX < canvasElement.height);
 
-                    if (withinCanvas) {
-                        context.fillText(element.data, element.x, element.y);
-                    }
-                });
+                        if (withinCanvas) {
+                            context.fillText(element.data, element.x, element.y);
+                        }
+                    });
+                }, 33);
             }
         } 
     };
@@ -46,4 +48,4 @@ var ExplorableCanvas = function (id, width, height) {
     canvas = Object.create({}, properties);
 
     return canvas;
-}
+};
