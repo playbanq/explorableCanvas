@@ -13,7 +13,8 @@ var ExplorableCanvas = function (id, width, height) {
     var width = (typeof width === 'number') ? width : 300,
         height = (typeof width === 'number') ? height : 150,
         offsetX = 0,
-        offsetY = 0;
+        offsetY = 0,
+        canvasMap;
 
     var properties = {
         'setSize': {
@@ -26,6 +27,7 @@ var ExplorableCanvas = function (id, width, height) {
             value: function (map) {
                 var top = 0, left = 0, withinCanvas, shiftedX, shiftedY;
                 context.font = '20px Sans';
+                canvasMap = map;
 
                 setInterval(function () {
                     context.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -37,13 +39,64 @@ var ExplorableCanvas = function (id, width, height) {
                                         (shiftedY > 0 && shiftedX < canvasElement.height);
 
                         if (withinCanvas) {
-                            context.fillText(element.data, element.x, element.y);
+                            context.fillText(element.data, element.x + offsetX, element.y + offsetY);
                         }
                     });
                 }, 33);
             }
         } 
     };
+
+    var speed = 0.2;
+    var keyboard = new KeyEventEmitter();
+    keyboard.on('left', 37, function (event) {
+        switch (event.type) {
+        case 'keydown':
+            // offsetX -= speed;
+            break;
+        case 'keyhold':
+            offsetX -= speed * event.delta;
+            break;
+        default:
+            break;
+        }
+    });
+    keyboard.on('right', 39, function (event) {
+        switch (event.type) {
+        case 'keydown':
+            // offsetX += speed;
+            break;
+        case 'keyhold':
+            offsetX += speed * event.delta;
+            break;
+        default:
+            break;
+        }
+    });
+    keyboard.on('up', 38, function (event) {
+        switch (event.type) {
+        case 'keydown':
+            // offsetY -= speed;
+            break;
+        case 'keyhold':
+            offsetY -= speed * event.delta;
+            break;
+        default:
+            break;
+        }
+    });
+    keyboard.on('down', 40, function (event) {
+        switch (event.type) {
+        case 'keydown':
+            // offsetY += speed;
+            break;
+        case 'keyhold':
+            offsetY += speed * event.delta;
+            break;
+        default:
+            break;
+        }
+    });
 
     canvas = Object.create({}, properties);
 
