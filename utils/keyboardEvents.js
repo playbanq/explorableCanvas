@@ -7,12 +7,20 @@ var KeyboardEvents = function (options) {
     var emitter,            // the pseudo event emitter to return
         pressedKeys = {},   // the keys that are hold down at any given time
         listeners = {},     // subscribed callbacks to keyboard events
-        context = window;   // top level element where events are being handled
+        context = document; // top level element where events are being handled
         clock = {           // Clock for keys that are hold down
             last: (new Date()).getTime(),
             current: null,
-            interval: (typeof options === 'object') ? options.keyholdInterval || 33 : 33
+            interval: 33
         };
+
+    // Change the clock.interval or the context where events are going to be handled
+    if (typeof options === 'object') {
+        clock.interval = options.keyholdInterval || clock.interval;
+        if (options.context === 'window') {
+            context = window;
+        }
+    }
 
     // On 'keydown' events
     context.onkeydown = function (event) {
