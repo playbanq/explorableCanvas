@@ -53,7 +53,7 @@ var ExplorableCanvas = function (id, width, height) {
     };
 
     var speed = 0.2;
-    var keyboard = new KeyboardEvents({ context: 'window'});
+    var keyboard = new KeyboardEvents.emitter();
     keyboard.on('left', 37, {
         'onkeyhold': function (delta) {
             offsetX += speed * delta;

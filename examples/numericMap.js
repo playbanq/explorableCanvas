@@ -24,6 +24,7 @@ for (var i = 0; i < numericMap.height; i++) {
 }
 
 // Create canvas and start drawing
-var canvas = new ExplorableCanvas('explorableCanvas', 500, 500);
+var canvas = new ExplorableCanvas('explorableCanvas');
+canvas.setSize(500, 500);
 
 canvas.drawMap(numericMap);
