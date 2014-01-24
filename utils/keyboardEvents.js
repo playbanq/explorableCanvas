@@ -1,4 +1,4 @@
-var KeyEventEmitter = function () {
+var KeyboardEvents = function () {
     var emitter, pressedKeys = {}, listeners = {};
 
     window.onkeydown = function (event) {
