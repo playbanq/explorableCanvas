@@ -88,6 +88,35 @@ var KeyboardEvents = function (options) {
                     callbacks: callbacks
                 });
             }
+        },
+        'off': {
+            value: function (keyName, keyCode, event) {
+                if (listeners[keyCode] instanceof Array) {
+                    for (var index in listeners[keyCode]) {
+                        var listener = listeners[keyCode][index];
+                        if (keyName === listener.name) {
+                            // If no event is specified, remove all listeners
+                            if (!event) {
+                                listener.callbacks = {};
+                            // Otherwise, a string with the event name(s) must be passed
+                            } else if (typeof event === 'string') {
+                                event = event.split(' ');
+                                // One event
+                                if (event.length === 1 && listener.callbacks[event[0]]) {
+                                    listener.callbacks[event[0]] = undefined;
+                                } else {
+                                // Two or more events
+                                    event.forEach(function (name) {
+                                        if (listener.callbacks[name]) {
+                                            listener.callbacks[name] = undefined;
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
