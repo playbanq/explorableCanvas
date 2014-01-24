@@ -53,57 +53,29 @@ var ExplorableCanvas = function (id, width, height) {
     };
 
     var speed = 0.2;
-    var keyboard = new KeyEventEmitter();
-    keyboard.on('left', 37, function (event) {
-        switch (event.type) {
-        case 'keydown':
-            // offsetX += speed;
-            break;
-        case 'keyhold':
-            offsetX += speed * event.delta;
+    var keyboard = new KeyboardEvents({ context: 'window'});
+    keyboard.on('left', 37, {
+        'onkeyhold': function (delta) {
+            offsetX += speed * delta;
             offsetX = (offsetX > theMap.left) ? theMap.left: offsetX;
-            break;
-        default:
-            break;
         }
     });
-    keyboard.on('right', 39, function (event) {
-        switch (event.type) {
-        case 'keydown':
-            // offsetX -= speed;
-            break;
-        case 'keyhold':
-            offsetX -= speed * event.delta;
+    keyboard.on('right', 39, {
+        'onkeyhold': function (delta) {
+            offsetX -= speed * delta;
             offsetX = (offsetX < -theMap.right + width) ? -theMap.right + width : offsetX;
-            break;
-        default:
-            break;
         }
     });
-    keyboard.on('up', 38, function (event) {
-        switch (event.type) {
-        case 'keydown':
-            // offsetY += speed;
-            break;
-        case 'keyhold':
-            offsetY += speed * event.delta;
+    keyboard.on('up', 38, {
+        'onkeyhold': function (delta) {
+            offsetY += speed * delta;
             offsetY = (offsetY > theMap.top) ? theMap.top: offsetY;
-            break;
-        default:
-            break;
         }
     });
-    keyboard.on('down', 40, function (event) {
-        switch (event.type) {
-        case 'keydown':
-            // offsetY -= speed;
-            break;
-        case 'keyhold':
-            offsetY -= speed * event.delta;
+    keyboard.on('down', 40, { 
+        'onkeyhold': function (delta) {
+            offsetY -= speed * delta;
             offsetY = (offsetY < -theMap.bottom + height) ? -theMap.bottom + height : offsetY;
-            break;
-        default:
-            break;
         }
     });
 
