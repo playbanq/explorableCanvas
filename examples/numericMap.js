@@ -4,7 +4,7 @@ var numericMap = {
     zoneSize: 10,
     top: 0,
     left: 0,
-    width: 0,
+    width: 30,
     height: 30,
     elements: []
 };
