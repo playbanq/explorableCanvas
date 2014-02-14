@@ -1,85 +1,79 @@
-var ExplorableCanvas = function (id, width, height) {
-    var canvas, canvasElement = document.getElementById(id);
-    if (!canvasElement) {
-        console.log('ERROR: The element with id "' + id + '" was not found in the DOM.');
-        return
-    } else if (canvasElement.nodeName !== 'CANVAS') {
-        console.log('ERROR: The element with id ' + id + ' is not a canvas element.');
+/** Creates a tile-based grid and extends a canvas element with the related methods
+ * @param {object} canvas - The canvas element object obtained from document.getElementById
+ * @param {number} tileSize - The size of the tiles of the grid
+ * @returns {object} - An object containing the methods used to extend the initial canvas object
+ */
+var ExplorableCanvas = Object.create({}, {
+    'extend': {
+        value: explorableCanvas
+    }
+});
+
+function explorableCanvas(canvas) {
+    if (canvas.nodeName !== 'CANVAS') {
+        console.log('ERROR: The element provided is not a canvas element.');
         return;
     }
-    canvas = canvasElement;
-    var context = canvas.getContext('2d');
 
     var width = (typeof width === 'number') ? width : 300,
-        height = (typeof width === 'number') ? height : 150,
-        offsetX = 0,
-        offsetY = 0,
-        theMap;
-
-    canvasElement.width = width;
-    canvasElement.height = height;
+        height = (typeof height === 'number') ? height : 150,
+        theMap,
+        speed = {
+            x: 0.4,
+            y: 0.4
+        };
 
     var properties = {
-        'setSize': {
-            value: function (newWidth, newHeight) {
-                width = newWidth;
-                height = newHeight;
-                canvasElement.width = newWidth;
-                canvasElement.height = newHeight;
+        setSpeed: {
+            value: function (newSpeed) {
+                if (typeof newSpeed === 'object') {
+                    speed.x = newSpeed.x || speed.x;
+                    speed.y = newSpeed.y || speed.y;
+                }
             }
         },
-        'drawMap': {
-            value: function (map) {
-                var top = 0, left = 0, withinCanvas, shiftedX, shiftedY;
-                context.font = '20px Sans';
-                theMap = map;
-
-                setInterval(function () {
-                    context.clearRect(0, 0, canvasElement.width, canvasElement.height);
-                    map.elements.forEach(function (element) {
-                        shiftedX = element.x + offsetX;
-                        shiftedY = element.y + offsetY;
-
-                        withinCanvas = (shiftedX > 0 && shiftedX < canvasElement.width) &&
-                                        (shiftedY > 0 && shiftedX < canvasElement.height);
-
-                        if (withinCanvas) {
-                            context.fillText(element.data, element.x + offsetX, element.y + offsetY);
-                        }
-                    });
-                }, 33);
+        setSize: {
+            writable: true,
+            value: function (newWidth, newHeight) {
+                canvas.width = newWidth || window.innerWidth;
+                canvas.height = newHeight || window.innerHeight;
             }
-        } 
+        }
     };
+    
+    if (typeof KeyboardEvents === 'object') {
+        var keyboard = new KeyboardEvents.emitter();
+        keyboard.on('left', 37, {
+            'onkeyhold': function (delta) {
+                var offset = Math.floor(canvas.grid.offset.left - speed.x * delta),
+                    left = canvas.grid.left;
+                canvas.grid.offset.left = (offset < left) ? left: offset;
+            }
+        });
+        keyboard.on('right', 39, {
+            'onkeyhold': function (delta) {
+                var offset = Math.floor(canvas.grid.offset.left + speed.x * delta),
+                    right = canvas.grid.right - canvas.width;
+                canvas.grid.offset.left = (offset > right) ? right: offset;
+            }
+        });
+        keyboard.on('up', 38, {
+            'onkeyhold': function (delta) {
+                var offset = Math.floor(canvas.grid.offset.top - speed.y * delta),
+                    top = canvas.grid.top;
+                canvas.grid.offset.top = (offset < top) ? top: offset;
+            }
+        });
+        keyboard.on('down', 40, {
+            'onkeyhold': function (delta) {
+                var offset = Math.floor(canvas.grid.offset.top + speed.y * delta),
+                    bottom = canvas.grid.bottom - canvas.height;
+                canvas.grid.offset.top = (offset > bottom) ? bottom: offset;
+            }
+        });
+    }
 
-    var speed = 0.2;
-    var keyboard = new KeyboardEvents.emitter();
-    keyboard.on('left', 37, {
-        'onkeyhold': function (delta) {
-            offsetX += speed * delta;
-            offsetX = (offsetX > theMap.left) ? theMap.left: offsetX;
-        }
-    });
-    keyboard.on('right', 39, {
-        'onkeyhold': function (delta) {
-            offsetX -= speed * delta;
-            offsetX = (offsetX < -theMap.right + width) ? -theMap.right + width : offsetX;
-        }
-    });
-    keyboard.on('up', 38, {
-        'onkeyhold': function (delta) {
-            offsetY += speed * delta;
-            offsetY = (offsetY > theMap.top) ? theMap.top: offsetY;
-        }
-    });
-    keyboard.on('down', 40, { 
-        'onkeyhold': function (delta) {
-            offsetY -= speed * delta;
-            offsetY = (offsetY < -theMap.bottom + height) ? -theMap.bottom + height : offsetY;
-        }
-    });
-
-    canvas = Object.create({}, properties);
-
-    return canvas;
+    Object.defineProperties(canvas, properties);
+    
+    return Object.create({}, properties);
 };
