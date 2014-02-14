@@ -1,6 +1,5 @@
-/** Creates a tile-based grid and extends a canvas element with the related methods
+/** Enables the exploration of maps by modifying the top and left offsets of its inner grid
  * @param {object} canvas - The canvas element object obtained from document.getElementById
- * @param {number} tileSize - The size of the tiles of the grid
  * @returns {object} - An object containing the methods used to extend the initial canvas object
  */
 var ExplorableCanvas = Object.create({}, {
@@ -15,10 +14,7 @@ function explorableCanvas(canvas) {
         return;
     }
 
-    var width = (typeof width === 'number') ? width : 300,
-        height = (typeof height === 'number') ? height : 150,
-        theMap,
-        speed = {
+    var speed = {
             x: 0.1,
             y: 0.1
         };
