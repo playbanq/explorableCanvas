@@ -2,10 +2,14 @@ var canvas = document.getElementById('explorableCanvas'),
     context = canvas.getContext('2d');
 
 TiledCanvas.extend(canvas, 50);
-ExplorableCanvas.extend(canvas);
+    canvas.setSize(500, 500);
+    canvas.grid.setSize(1000, 1000);
 
-canvas.setSize(500, 500);
-canvas.grid.setSize(1000, 1000);
+ExplorableCanvas.extend(canvas);
+    canvas.setSpeed({
+        x: 0.3,
+        y: 0.3
+    });
 
 setInterval(function () {
     context.clearRect(0, 0, canvas.width, canvas.height);

@@ -19,8 +19,8 @@ function explorableCanvas(canvas) {
         height = (typeof height === 'number') ? height : 150,
         theMap,
         speed = {
-            x: 0.4,
-            y: 0.4
+            x: 0.1,
+            y: 0.1
         };
 
     var properties = {
