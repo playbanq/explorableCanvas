@@ -38,23 +38,36 @@ function explorableCanvas(canvas) {
     };
     
     if (typeof KeyboardEvents === 'object') {
+        function getZoom() {
+            var zoom = 1;
+            if (canvas.zoom) {
+                zoom = canvas.zoom.scale;
+                if (typeof zoom !== 'number' || isNaN(zoom)) {
+                    zoom = 1;
+                }
+            };
+            return zoom;
+        }
         var keyboard = new KeyboardEvents.emitter();
         keyboard.on('left', 37, {
             'onkeyhold': function (delta) {
-                var offset = Math.floor(canvas.grid.offset.left - speed.x * delta),
+                var zoom = getZoom();
+                var offset = Math.floor((canvas.grid.offset.left - speed.x * delta)),
                     left = canvas.grid.left;
-                canvas.grid.offset.left = (offset < left) ? left: offset;
+                canvas.grid.offset.left = (offset < left) ? left : offset;
             }
         });
         keyboard.on('right', 39, {
             'onkeyhold': function (delta) {
-                var offset = Math.floor(canvas.grid.offset.left + speed.x * delta),
-                    right = canvas.grid.right - canvas.width;
-                canvas.grid.offset.left = (offset > right) ? right: offset;
+                var zoom = getZoom();
+                var offset = Math.floor((canvas.grid.offset.left + speed.x * delta)),
+                    right = canvas.grid.right - canvas.width/zoom;
+                canvas.grid.offset.left = (offset > right) ? right : offset;
             }
         });
         keyboard.on('up', 38, {
             'onkeyhold': function (delta) {
+                var zoom = getZoom();
                 var offset = Math.floor(canvas.grid.offset.top - speed.y * delta),
                     top = canvas.grid.top;
                 canvas.grid.offset.top = (offset < top) ? top: offset;
@@ -62,8 +75,9 @@ function explorableCanvas(canvas) {
         });
         keyboard.on('down', 40, {
             'onkeyhold': function (delta) {
+                var zoom = getZoom();
                 var offset = Math.floor(canvas.grid.offset.top + speed.y * delta),
-                    bottom = canvas.grid.bottom - canvas.height;
+                    bottom = canvas.grid.bottom - canvas.height/zoom;
                 canvas.grid.offset.top = (offset > bottom) ? bottom: offset;
             }
         });
