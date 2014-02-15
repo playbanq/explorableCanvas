@@ -2,8 +2,8 @@ var canvas = document.getElementById('explorableCanvas'),
     context = canvas.getContext('2d');
 
 TiledCanvas.extend(canvas, 50);
-    canvas.setSize(500, 500);
-    canvas.grid.setSize(1000, 1000);
+    canvas.setSize();
+    canvas.grid.setSize(3000, 2000);
 // The grid can be extended in all directions
     canvas.grid.top -= 50;
     canvas.grid.left -= 50;
@@ -11,7 +11,8 @@ TiledCanvas.extend(canvas, 50);
     canvas.grid.right += 50;
 
 ExplorableCanvas.extend(canvas);
-    canvas.setSpeed({ x: 0.3, y: 0.3 });
+    canvas.setSpeed({ x: 0.4, y: 0.4 });
+ZoomableCanvas.extend(canvas);
 
 setInterval(function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
